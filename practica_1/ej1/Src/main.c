@@ -35,12 +35,20 @@
 #define TIME_TOOGLE_LED_2 500  //time in ms
 #define TIME_TOOGLE_LED_3 1000 //time in ms
 
-delay_t toogle_led [3]  ;
+enum t_typename{
+	TYPENAME_UINT32_T
+};
 
 
+#define typename(x) _Generic((x), \
+\
+	tick_t: TYPENAME_UINT32_T    \
+)
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+delay_t toogle_led [3]  ;
+
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
 
@@ -73,22 +81,39 @@ int main(void)
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
 
-  /* Initialize BSP Led for LED2 */
+  /*Initialize BSP Led for LED2 */
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
- /* initialize toogle time leds */
+  /*initialize toogle time leds */
   delayInit(&toogle_led[LED1], TIME_TOOGLE_LED_1) ;
-  delayInit(&toogle_led[LED2], TIME_TOOGLE_LED_2) ;
+  delayInit(&toogle_led[LED2], -33) ;
   delayInit(&toogle_led[LED3], TIME_TOOGLE_LED_3) ;
 
-
-
+  /*start the clock for toogle_leds*/
+  delayRead(&toogle_led[LED1]) ;
+  delayRead(&toogle_led[LED2]) ;
+  delayRead(&toogle_led[LED3]) ;
   /* Infinite loop */
   while (1)
   {
+	  if (delayRead(&toogle_led[LED1])==true)
+	  {
+		  delayRead(&toogle_led[LED1]) ;
+		  BSP_LED_Toggle(LED1) ;
+	  }
 
+	  if (delayRead(&toogle_led[LED2])==true)
+	  {
+	 	  delayRead(&toogle_led[LED2]) ;
+	 	  BSP_LED_Toggle(LED2) ;
+	  }
 
+	  if (delayRead(&toogle_led[LED3])==true)
+  	  {
+  	 	  delayRead(&toogle_led[LED3]) ;
+ 	 	  BSP_LED_Toggle(LED3) ;
+  	  }
 
   }
 }
@@ -96,8 +121,15 @@ int main(void)
 
 void delayInit( delay_t * delay, tick_t duration )
 {
+	bool_t istick = typename(duration) == TYPENAME_UINT32_T;
 
-	delay->duration = duration ;
+	if (delay == NULL){
+		return ;
+	}
+	if (istick == true){
+		delay->duration = duration ;
+
+	}
 
 }
 
@@ -105,11 +137,16 @@ bool_t delayRead( delay_t * delay )
 {
 	bool_t response = false ; // ver a que nombre cambiar para mejorar legilibiladad
 	// como recien inicia, entonces la respuesta es false
+	if (delay == NULL){ // aca estaria bueno encender errores de compilación
+		return response ;
+	}
+	// si el puntero no es nulo
 	if (delay->running == false){
 		delay->startTime = (tick_t )HAL_GetTick();
 		delay->running = true ;
 		response = false ;
 	}else{
+
 		response = ((tick_t) HAL_GetTick() - delay->startTime)>= delay->duration?true:false ;
 		if (response == true){
 			delay->startTime = (tick_t )HAL_GetTick() ;
@@ -123,8 +160,9 @@ bool_t delayRead( delay_t * delay )
 
 void delayWrite( delay_t * delay, tick_t duration )
 {
-	// ver si cambia realmente !
-	delay->duration = duration ;
+	if (delay->duration != duration){
+		delay->duration = duration ;
+	}
 
 
 }
