@@ -70,6 +70,7 @@ int main(void)
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
+  delay_t delay ;
 
 
   /* Infinite loop */
@@ -84,9 +85,8 @@ int main(void)
 
 void delayInit( delay_t * delay, tick_t duration )
 {
-	delay->startTime = HAL_GetTick() ;
+
 	delay->duration = duration ;
-	delay->running = true ;
 
 }
 
