@@ -32,7 +32,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define TIME_TOOGLE_LED_1 100  //time in ms
-#define TIME_TOOGLE_LED_2 -500  //time in ms
+#define TIME_TOOGLE_LED_2 500  //time in ms
 #define TIME_TOOGLE_LED_3 1000 //time in ms
 
 
