@@ -32,17 +32,21 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define TIME_TOOGLE_LED_1 100  //time in ms
-#define TIME_TOOGLE_LED_2 500  //time in ms
+#define TIME_TOOGLE_LED_2 -500  //time in ms
 #define TIME_TOOGLE_LED_3 1000 //time in ms
 
+
+// no funciona porque el pasaje es por parámetros -- consultar al profe
 enum t_typename{
-	TYPENAME_UINT32_T
+	TYPENAME_UINT32_T = 20,
+	TYPENAME_OTHER
 };
 
 
 #define typename(x) _Generic((x), \
 \
-	tick_t: TYPENAME_UINT32_T    \
+	tick_t: TYPENAME_UINT32_T,   \
+	default : TYPENAME_OTHER	 \
 )
 
 /* Private macro -------------------------------------------------------------*/
@@ -86,10 +90,13 @@ int main(void)
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
   /*initialize toogle time leds */
+#if TIME_TOOGLE_LED_1<0 || TIME_TOOGLE_LED_2<0  || TIME_TOOGLE_LED_3<0
+	#error "los valores de retardo son negativos "
+#else
   delayInit(&toogle_led[LED1], TIME_TOOGLE_LED_1) ;
-  delayInit(&toogle_led[LED2], -33) ;
+  delayInit(&toogle_led[LED2], TIME_TOOGLE_LED_1) ;
   delayInit(&toogle_led[LED3], TIME_TOOGLE_LED_3) ;
-
+#endif
   /*start the clock for toogle_leds*/
   delayRead(&toogle_led[LED1]) ;
   delayRead(&toogle_led[LED2]) ;
@@ -121,15 +128,11 @@ int main(void)
 
 void delayInit( delay_t * delay, tick_t duration )
 {
-	bool_t istick = typename(duration) == TYPENAME_UINT32_T;
 
 	if (delay == NULL){
 		return ;
 	}
-	if (istick == true){
-		delay->duration = duration ;
-
-	}
+	delay->duration = duration ;
 
 }
 
