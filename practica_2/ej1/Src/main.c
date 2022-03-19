@@ -74,10 +74,7 @@ int main(void)
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
-  uint32_t time_led_1 = 0  ;
-  uint32_t time_led_2 = 0 ;
-  uint32_t time_led_3 = 0;
-
+  
   /* Infinite loop */
   while (1)
   {
