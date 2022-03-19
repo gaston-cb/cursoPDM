@@ -52,13 +52,6 @@
 #define USARTx_RX_AF                     GPIO_AF7_USART3
 
 
-typedef uint32_t tick_t;
-typedef bool bool_t;
-typedef struct{
-   tick_t startTime;
-   tick_t duration;
-   bool_t running;
-} delay_t;
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

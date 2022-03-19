@@ -1,6 +1,15 @@
-#include <stdint.h>
+/*
+ * API_delay.c
+ *
+ *  Created on: 19 mar. 2022
+ *      Author: gaston
+ */
 #include <stdbool.h>
-#include <main.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "stm32f4xx_hal.h"
+#include "API_delay.h"
+
 
 void delayInit( delay_t * delay, tick_t duration )
 {
@@ -63,3 +72,7 @@ void delayWrite( delay_t * delay, tick_t duration )
 
 
 }
+
+
+
+
