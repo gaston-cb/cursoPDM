@@ -31,27 +31,22 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define TIME_TOOGLE_LED_1 2000  //time in ms
-#define TIME_TOOGLE_LED_2 1500  //time in ms
-#define TIME_TOOGLE_LED_3 100 //time in ms
+#define TIME_LED_ON 200
+// UNCOMMENTS TO SEQUENCE SELECT TO USER
+//#define SEQUENCE_LEDS  1  //SEQ: LED1 LED2 LED3
+//#define SEQUENCE_LEDS 2 //SEQ: LED1 LED3 LED2
+//#define SEQUENCE_LEDS 3 //SEQ: LED2 LED3 LED1
+//#define SEQUENCE_LEDS 4 //SEQ: LED2 LED1 LED3
+//#define SEQUENCE_LEDS 5 //SEQ: LED3 LED2 LED1
+#define SEQUENCE_LEDS 6 //SEQ: LED3 LED1 LED2
 
 
-// no funciona porque el pasaje es por parámetros -- consultar al profe
-enum t_typename{
-	TYPENAME_UINT32_T = 20,
-	TYPENAME_OTHER
-};
 
 
-#define typename(x) _Generic((x), \
-\
-	tick_t: TYPENAME_UINT32_T,   \
-	default : TYPENAME_OTHER	 \
-)
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-delay_t toogle_led [3]  ;
+delay_t toogle_led ;
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
@@ -84,43 +79,101 @@ int main(void)
 
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
+#if SEQUENCE_LEDS==1
+  uint8_t seq_led[3] = {LED1,LED2,LED3} ;
+#elif SEQUENCE_LEDS==2
+  uint8_t seq_led[3] = {LED1,LED3,LED2} ;
+#elif SEQUENCE_LEDS==3
+  uint8_t seq_led[3] = {LED2,LED3,LED1} ;
+#elif SEQUENCE_LEDS==4
+  uint8_t seq_led[3] = {LED2,LED1,LED3} ;
+#elif SEQUENCE_LEDS==5
+  uint8_t seq_led[3] = {LED3,LED2,LED1} ;
+#elif SEQUENCE_LEDS==6
+  uint8_t seq_led[3] = {LED3,LED1,LED2} ;
+#else
+#endif
+
 
   /*Initialize BSP Led for LED2 */
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
   /*initialize toogle time leds */
-#if TIME_TOOGLE_LED_1<0 || TIME_TOOGLE_LED_2<0  || TIME_TOOGLE_LED_3<0
-	#error "los valores de retardo son negativos "
-#else
-  delayInit(&toogle_led[LED1], TIME_TOOGLE_LED_1) ;
-  delayInit(&toogle_led[LED2], TIME_TOOGLE_LED_1) ;
-  delayInit(&toogle_led[LED3], TIME_TOOGLE_LED_3) ;
-#endif
-  /*start the clock for toogle_leds*/
-  delayRead(&toogle_led[LED1]) ;
-  delayRead(&toogle_led[LED2]) ;
-  delayRead(&toogle_led[LED3]) ;
-  /* Infinite loop */
+  delayInit(&toogle_led,TIME_LED_ON ) ;
+  uint8_t index_leds = 0 ;
   while (1)
   {
-	  if (delayRead(&toogle_led[LED1])==true)
-	  {
-		  delayRead(&toogle_led[LED1]) ;
-		  BSP_LED_Toggle(LED1) ;
+#if SEQUENCE_LEDS == 1
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
+	  }
+#elif SEQUENCE_LEDS==2
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
 	  }
 
-	  if (delayRead(&toogle_led[LED2])==true)
-	  {
-	 	  delayRead(&toogle_led[LED2]) ;
-	 	  BSP_LED_Toggle(LED2) ;
+
+#elif SEQUENCE_LEDS==3
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
 	  }
 
-	  if (delayRead(&toogle_led[LED3])==true)
-  	  {
-  	 	  delayRead(&toogle_led[LED3]) ;
- 	 	  BSP_LED_Toggle(LED3) ;
-  	  }
+#elif SEQUENCE_LEDS==4
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
+	  }
+
+#elif SEQUENCE_LEDS==5
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
+	  }
+
+#elif SEQUENCE_LEDS==6
+	  if (delayRead(&toogle_led)){
+		  BSP_LED_On(seq_led[index_leds]) ;
+		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
+		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
+
+		  delayInit(&toogle_led,TIME_LED_ON) ;
+		  index_leds++ ;
+		  index_leds = index_leds%3 ;
+	  }
+
+#else
+	#error "secuencia de leds no elegida"
+#endif
+
 
   }
 }
