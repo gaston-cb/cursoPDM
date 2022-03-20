@@ -31,14 +31,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define TIME_LED_ON 200
+#define TIME_LED_ON 500 //time in ms
 // UNCOMMENTS TO SEQUENCE SELECT TO USER
 //#define SEQUENCE_LEDS  1  //SEQ: LED1 LED2 LED3
 //#define SEQUENCE_LEDS 2 //SEQ: LED1 LED3 LED2
-//#define SEQUENCE_LEDS 3 //SEQ: LED2 LED3 LED1
+#define SEQUENCE_LEDS 3 //SEQ: LED2 LED3 LED1
 //#define SEQUENCE_LEDS 4 //SEQ: LED2 LED1 LED3
 //#define SEQUENCE_LEDS 5 //SEQ: LED3 LED2 LED1
-#define SEQUENCE_LEDS 6 //SEQ: LED3 LED1 LED2
+//#define SEQUENCE_LEDS 6 //SEQ: LED3 LED1 LED2
 
 
 
@@ -52,7 +52,6 @@ delay_t toogle_led ;
 UART_HandleTypeDef UartHandle;
 
 /* Private function prototypes -----------------------------------------------*/
-
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
@@ -92,6 +91,7 @@ int main(void)
 #elif SEQUENCE_LEDS==6
   uint8_t seq_led[3] = {LED3,LED1,LED2} ;
 #else
+  #error "secuencia de leds no elegida"
 #endif
 
 

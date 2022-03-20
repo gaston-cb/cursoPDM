@@ -10,8 +10,6 @@
 #include "stm32f4xx_hal.h"
 #include "API_delay.h"
 
-
-
 void delayInit( delay_t * delay, tick_t duration )
 {
 
@@ -22,16 +20,22 @@ void delayInit( delay_t * delay, tick_t duration )
 	delay->duration = duration ;
 
 }
-
-
 /*
- * delay_t campo running false-> lo cambia a true, y toma el valor del system tick.En este caos
+ *
+ *@param: delay_t campo running false-> lo cambia a true, y toma el valor del system tick.En este caos
  * 								la rta es false, porque recien inicia
- * delay_t campo running true -> realiza la cuenta system_tick - startTime: si es mayor o igual al campo duration, responde true
+ *@param: delay_t campo running true -> realiza la cuenta system_tick - startTime: si es mayor o igual al campo duration, responde true
  * 								en caso contrario false
- * */
+ */
+/**
+  * @brief  Leer estado del clock
+  * @param  struct delay_t
+  * @retval true or false
+  *
+  */
 bool_t delayRead( delay_t * delay )
 {
+
 	bool_t response = false ; // respuesta de la función readDelay
 	// no se considera el caso de duration= 0 , porque no podría ocurrir
 	if (delay == NULL){
@@ -44,7 +48,6 @@ bool_t delayRead( delay_t * delay )
 		delay->running = true ;
 		response = false ;
 	}else{
-
 		response = ((tick_t) HAL_GetTick() - delay->startTime)>= delay->duration?true:false ;
 		if (response == true){
 			delay->startTime = (tick_t )HAL_GetTick() ;
@@ -67,6 +70,7 @@ void delayWrite( delay_t * delay, tick_t duration )
 	if (delay == NULL || duration ==  0){
 		return ;
 	}
+
 	if (delay->duration != duration){
 		delay->duration = duration ;
 	}
