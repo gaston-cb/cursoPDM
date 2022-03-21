@@ -12,7 +12,12 @@ La elección la realiza el programador desde el archivo main.c, dentro de la car
 - LED3 LED1 LED2 
 - LED3 LED2 LED1
 
+El tiempo de encendido de cada led, se corresponde con las macros definidas en "main.c", con TIME_LED_ONE, TIME_LED_TWO  y TIME_LED_THREE 
 
+Por ejemplo, si se desea la secuencia LED2, LED1 ,LED3, donde cada duración sea de 100ms, 200ms, y 300ms respectivamente, se debe escribir 
+TIME_LED_ONE   100 
+TIME_LED_TWO   200 
+TIME_LED_THREE 300
 
  
 
@@ -21,7 +26,12 @@ La elección se realiza descomentando las macro define del archivo, y realizando
 
 #Preguntas TP3 
 
-#1 p1 
+#1 Se pueden cambiar los tiempos de encendido de cada led fácilmente en un solo lugar del código o estos están hardcodeados? ¿Hay números “mágicos”?
+	Si, en el inicio del archivo main.c 
+	
 
-#2 p2 
+
+
+#2  ¿Qué bibliotecas estándar se debieron agregar a API_delay.h para que el código compile? Si las funcionalidades de una API propia crecieran, habría que pensar cuál sería el mejor lugar para incluir esas bibliotecas y algunos typedefs que se usan en el ejercicio.
+	Las bibliotecas a utilizar son <stdbool>, <stdint> y <stddef> 
 

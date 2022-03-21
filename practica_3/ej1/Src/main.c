@@ -33,7 +33,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define TIME_LED_ON 500 //time in ms
+#define TIME_LED_ONE   500 //time in ms
+#define TIME_LED_TWO   500 //time in ms
+#define TIME_LED_TRHEE 500 //time in ms
+
 // UNCOMMENTS TO SEQUENCE SELECT TO USER
 //#define SEQUENCE_LEDS  1  //SEQ: LED1 LED2 LED3
 //#define SEQUENCE_LEDS 2 //SEQ: LED1 LED3 LED2
@@ -102,7 +105,7 @@ int main(void)
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
   /*initialize toogle time leds */
-  delayInit(&toogle_led,TIME_LED_ON ) ;
+  delayInit(&toogle_led,TIME_LED_ONE ) ;
   uint8_t index_leds = 0 ;
   while (1)
   {
@@ -111,9 +114,22 @@ int main(void)
 		  BSP_LED_On(seq_led[index_leds]) ;
 		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
 		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-		  delayInit(&toogle_led,TIME_LED_ON) ;
 		  index_leds++ ;
 		  index_leds = index_leds%3 ;
+		  switch(index_leds){
+		  	  case 1:
+		  		  delayWrite(&toogle_led, TIME_LED_ONE) ;
+		  		  break ;
+		  	  case 2:
+		  		  delayWrite(&toogle_led, TIME_LED_TWO) ;
+		  		  break ;
+		  	  case 3:
+           	  	  delayWrite(&toogle_led, TIME_LED_TRHEE) ;
+		  		  break ;
+		  	  default:
+		  		  break ;
+		  		  // error handling
+		  }
 	  }
 
 
