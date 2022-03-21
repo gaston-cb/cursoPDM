@@ -10,6 +10,12 @@
 #include "stm32f4xx_hal.h"
 #include "API_delay.h"
 
+/**
+ * @brief inicia el
+ *
+ * @param
+ * @param duration
+ */
 void delayInit( delay_t * delay, tick_t duration )
 {
 
@@ -20,19 +26,13 @@ void delayInit( delay_t * delay, tick_t duration )
 	delay->duration = duration ;
 
 }
-/*
- *
- *@param: delay_t campo running false-> lo cambia a true, y toma el valor del system tick.En este caos
- * 								la rta es false, porque recien inicia
- *@param: delay_t campo running true -> realiza la cuenta system_tick - startTime: si es mayor o igual al campo duration, responde true
- * 								en caso contrario false
- */
+
 /**
-  * @brief  Leer estado del clock
-  * @param  struct delay_t
-  * @retval true or false
-  *
-  */
+ * @brief
+ *
+ * @param delay
+ * @return
+ */
 bool_t delayRead( delay_t * delay )
 {
 
@@ -59,9 +59,13 @@ bool_t delayRead( delay_t * delay )
 
 }
 
-/*
- * tick_t duration: cambia la duración del retardo
- * delay_t delay: clock dek sistema que se debe cambiar la duración */
+/**
+ * @brief
+ *
+ * @param delay
+ * @param duration
+ */
+
 void delayWrite( delay_t * delay, tick_t duration )
 {
 

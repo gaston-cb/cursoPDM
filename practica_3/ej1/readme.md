@@ -21,7 +21,7 @@ La elección se realiza descomentando las macro define del archivo, y realizando
 
 #Preguntas TP3 
 
-#1- p1 
+#1 p1 
 
-#2- p2 
+#2 p2 
 

@@ -29,9 +29,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  00020018  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000065f7  00000000  00000000  00020048  2**0
+ 13 .debug_info   000065f6  00000000  00000000  00020048  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 000014d0  00000000  00000000  0002663f  2**0
+ 14 .debug_abbrev 000014d0  00000000  00000000  0002663e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 00000500  00000000  00000000  00027b10  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  0002507d  00000000  00000000  00028458  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00007fff  00000000  00000000  0004d4d5  2**0
+ 18 .debug_line   00007ffe  00000000  00000000  0004d4d5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e1595  00000000  00000000  000554d4  2**0
+ 19 .debug_str    000e1595  00000000  00000000  000554d3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  00136a69  2**0
+ 20 .comment      00000053  00000000  00000000  00136a68  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00001198  00000000  00000000  00136abc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -354,10 +354,10 @@ Disassembly of section .text:
  80004e2:	bf00      	nop
 
 080004e4 <delayInit>:
-#include <stddef.h>
-#include "stm32f4xx_hal.h"
-#include "API_delay.h"
-
+ *
+ * @param
+ * @param duration
+ */
 void delayInit( delay_t * delay, tick_t duration )
 {
  80004e4:	b480      	push	{r7}
@@ -391,16 +391,17 @@ void delayInit( delay_t * delay, tick_t duration )
  800050c:	4770      	bx	lr
 
 0800050e <delayRead>:
- * 								la rta es false, porque recien inicia
- * delay_t campo running true -> realiza la cuenta system_tick - startTime: si es mayor o igual al campo duration, responde true
- * 								en caso contrario false
- * */
+ *
+ * @param delay
+ * @return
+ */
 bool_t delayRead( delay_t * delay )
 {
  800050e:	b580      	push	{r7, lr}
  8000510:	b084      	sub	sp, #16
  8000512:	af00      	add	r7, sp, #0
  8000514:	6078      	str	r0, [r7, #4]
+
 	bool_t response = false ; // respuesta de la función readDelay
  8000516:	2300      	movs	r3, #0
  8000518:	73fb      	strb	r3, [r7, #15]
@@ -3514,11 +3515,9 @@ int main(void)
   uint8_t index_leds = 0 ;
  80016e2:	2300      	movs	r3, #0
  80016e4:	71fb      	strb	r3, [r7, #7]
-		  index_leds = index_leds%3 ;
-	  }
+  while (1)
+  {
 
-
-#elif SEQUENCE_LEDS==3
 	  if (delayRead(&toogle_led)){
  80016e6:	4825      	ldr	r0, [pc, #148]	; (800177c <main+0xd4>)
  80016e8:	f7fe ff11 	bl	800050e <delayRead>
@@ -3564,7 +3563,6 @@ int main(void)
  8001746:	f813 3c04 	ldrb.w	r3, [r3, #-4]
  800174a:	4618      	mov	r0, r3
  800174c:	f7fe ff80 	bl	8000650 <BSP_LED_Off>
-
 		  delayInit(&toogle_led,TIME_LED_ON) ;
  8001750:	f44f 71fa 	mov.w	r1, #500	; 0x1f4
  8001754:	4809      	ldr	r0, [pc, #36]	; (800177c <main+0xd4>)

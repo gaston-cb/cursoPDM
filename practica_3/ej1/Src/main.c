@@ -1,9 +1,11 @@
  /**
   ******************************************************************************
-  * @file    UART/UART_Printf/Src/main.c
-  * @author  MCD Application Team
-  * @brief   This example shows how to retarget the C library printf function
-  *          to the UART.
+  * @file    main.c
+  * @author  Gastón Valdez
+  * @brief   Se maneja una secuencia de encendido de leds a demanda por el programador
+  * 		 El programador debe seleccionar la secuencia con una macro.
+  * 		 La placa seleccionada es nucleo-144.
+  * 		 Curso Programación de microprocesadores FIUBA.
   ******************************************************************************
   * @attention
   *
@@ -104,75 +106,15 @@ int main(void)
   uint8_t index_leds = 0 ;
   while (1)
   {
-#if SEQUENCE_LEDS == 1
+
 	  if (delayRead(&toogle_led)){
 		  BSP_LED_On(seq_led[index_leds]) ;
 		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
 		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
 		  delayInit(&toogle_led,TIME_LED_ON) ;
 		  index_leds++ ;
 		  index_leds = index_leds%3 ;
 	  }
-#elif SEQUENCE_LEDS==2
-	  if (delayRead(&toogle_led)){
-		  BSP_LED_On(seq_led[index_leds]) ;
-		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
-		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
-		  delayInit(&toogle_led,TIME_LED_ON) ;
-		  index_leds++ ;
-		  index_leds = index_leds%3 ;
-	  }
-
-
-#elif SEQUENCE_LEDS==3
-	  if (delayRead(&toogle_led)){
-		  BSP_LED_On(seq_led[index_leds]) ;
-		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
-		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
-		  delayInit(&toogle_led,TIME_LED_ON) ;
-		  index_leds++ ;
-		  index_leds = index_leds%3 ;
-	  }
-
-#elif SEQUENCE_LEDS==4
-	  if (delayRead(&toogle_led)){
-		  BSP_LED_On(seq_led[index_leds]) ;
-		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
-		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
-		  delayInit(&toogle_led,TIME_LED_ON) ;
-		  index_leds++ ;
-		  index_leds = index_leds%3 ;
-	  }
-
-#elif SEQUENCE_LEDS==5
-	  if (delayRead(&toogle_led)){
-		  BSP_LED_On(seq_led[index_leds]) ;
-		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
-		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
-		  delayInit(&toogle_led,TIME_LED_ON) ;
-		  index_leds++ ;
-		  index_leds = index_leds%3 ;
-	  }
-
-#elif SEQUENCE_LEDS==6
-	  if (delayRead(&toogle_led)){
-		  BSP_LED_On(seq_led[index_leds]) ;
-		  BSP_LED_Off(seq_led[(index_leds+1)%3]) ;
-		  BSP_LED_Off(seq_led[(index_leds+2)%3]) ;
-
-		  delayInit(&toogle_led,TIME_LED_ON) ;
-		  index_leds++ ;
-		  index_leds = index_leds%3 ;
-	  }
-
-#else
-	#error "secuencia de leds no elegida"
-#endif
 
 
   }

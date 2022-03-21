@@ -31,13 +31,28 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define TEST_2
-#define LED_1_TIME 200 //time in miliseconds !
-#define LED_2_TIME 200
-#define LED_3_TIME 200
+#define TIME_TOOGLE_LED_1 100  //time in ms
+#define TIME_TOOGLE_LED_2 500  //time in ms
+#define TIME_TOOGLE_LED_3 1000 //time in ms
+
+
+// no funciona porque el pasaje es por parámetros -- consultar al profe
+enum t_typename{
+	TYPENAME_UINT32_T = 20,
+	TYPENAME_OTHER
+};
+
+
+#define typename(x) _Generic((x), \
+\
+	tick_t: TYPENAME_UINT32_T,   \
+	default : TYPENAME_OTHER	 \
+)
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+delay_t toogle_led [3]  ;
+
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
 
@@ -70,39 +85,112 @@ int main(void)
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
 
-  /* Initialize BSP Led for LED2 */
+  /*Initialize BSP Led for LED2 */
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
-  
+  /*initialize toogle time leds */
+#if TIME_TOOGLE_LED_1<0 || TIME_TOOGLE_LED_2<0  || TIME_TOOGLE_LED_3<0
+	#error "los valores de retardo son negativos "
+#else
+  delayInit(&toogle_led[LED1], TIME_TOOGLE_LED_1) ;
+  delayInit(&toogle_led[LED2], TIME_TOOGLE_LED_1) ;
+  delayInit(&toogle_led[LED3], TIME_TOOGLE_LED_3) ;
+#endif
+  /*start the clock for toogle_leds*/
+  delayRead(&toogle_led[LED1]) ;
+  delayRead(&toogle_led[LED2]) ;
+  delayRead(&toogle_led[LED3]) ;
   /* Infinite loop */
   while (1)
   {
-#ifdef TEST_1
-	  BSP_LED_On(LED1) ;
-	  BSP_LED_Off(LED2) ;
-	  BSP_LED_Off(LED3) ;
-	  HAL_Delay(200);
-	  BSP_LED_On(LED2) ;
-	  BSP_LED_Off(LED1) ;
-	  BSP_LED_Off(LED3) ;
-	  HAL_Delay(200);
-	  BSP_LED_On(LED3) ;
-	  BSP_LED_Off(LED1) ;
-	  BSP_LED_Off(LED2) ;
-	  HAL_Delay(200);
-#elif defined  TEST_2
-
-	  uint32_t system_tick = HAL_GetTick();
-	  if (abs(system_tick - time_led_1)>=  LED_1_TIME){
-		  time_led_1 = system_tick ;
-		  BSP_LED_Toggle(LED1);
+	  if (delayRead(&toogle_led[LED1])==true)
+	  {
+		  delayRead(&toogle_led[LED1]) ;
+		  BSP_LED_Toggle(LED1) ;
 	  }
 
-#endif
+	  if (delayRead(&toogle_led[LED2])==true)
+	  {
+	 	  delayRead(&toogle_led[LED2]) ;
+	 	  BSP_LED_Toggle(LED2) ;
+	  }
+
+	  if (delayRead(&toogle_led[LED3])==true)
+  	  {
+  	 	  delayRead(&toogle_led[LED3]) ;
+ 	 	  BSP_LED_Toggle(LED3) ;
+  	  }
 
   }
 }
+
+
+void delayInit( delay_t * delay, tick_t duration )
+{
+
+	// si no hay puntero, o la duración es cero, no configura el clock
+	if (delay == NULL || duration == 0){
+		return ;
+	}
+	delay->duration = duration ;
+
+}
+
+
+/*
+ * delay_t campo running false-> lo cambia a true, y toma el valor del system tick.En este caos
+ * 								la rta es false, porque recien inicia
+ * delay_t campo running true -> realiza la cuenta system_tick - startTime: si es mayor o igual al campo duration, responde true
+ * 								en caso contrario false
+ * */
+bool_t delayRead( delay_t * delay )
+{
+	bool_t response = false ; // respuesta de la función readDelay
+	// no se considera el caso de duration= 0 , porque no podría ocurrir
+	if (delay == NULL){
+		return response ;
+	}
+	// si el puntero no es nulo
+	// como recien inicia, entonces la respuesta es false
+	if (delay->running == false){
+		delay->startTime = (tick_t )HAL_GetTick();
+		delay->running = true ;
+		response = false ;
+	}else{
+
+		response = ((tick_t) HAL_GetTick() - delay->startTime)>= delay->duration?true:false ;
+		if (response == true){
+			delay->startTime = (tick_t )HAL_GetTick() ;
+		}
+	}
+
+	return response ;
+
+
+}
+
+/*
+ * tick_t duration: cambia la duración del retardo
+ * delay_t delay: clock dek sistema que se debe cambiar la duración */
+void delayWrite( delay_t * delay, tick_t duration )
+{
+
+	// si la duración es cero o no hay puntero asignado, retorna la función
+
+	if (delay_t == NULL || duration ==  0){
+		return ;
+	}
+	if (delay->duration != duration){
+		delay->duration = duration ;
+	}
+
+
+}
+
+
+
+
 
 
 /**

@@ -14,10 +14,26 @@ typedef struct{
    tick_t duration;
    bool_t running;
 } delay_t;
+
 /**
+ * @brief
  *
+ * @param delay
+ * @param duration
  */
 void delayInit( delay_t * delay, tick_t duration );
+/**
+ * @brief
+ *
+ * @param delay
+ * @return valor booleano
+ */
 bool_t delayRead( delay_t * delay );
+/**
+ * @brief
+ *
+ * @param delay
+ * @param duration
+ */
 void delayWrite( delay_t * delay, tick_t duration );
 
