@@ -24,17 +24,17 @@ TIME_LED_THREE 300
 
 La elección se realiza descomentando las macro define del archivo, y realizando la compilación.  
 
-#Preguntas TP3 
+##Preguntas TP3 
 
-#1 Se pueden cambiar los tiempos de encendido de cada led fácilmente en un solo lugar del código o estos están hardcodeados? ¿Hay números “mágicos”?
+##1 Se pueden cambiar los tiempos de encendido de cada led fácilmente en un solo lugar del código o estos están hardcodeados? ¿Hay números “mágicos”?
 	Si, en el inicio del archivo main.c 
 	
 
 
 
-#2  ¿Qué bibliotecas estándar se debieron agregar a API_delay.h para que el código compile? Si las funcionalidades de una API propia crecieran, habría que pensar cuál sería el mejor lugar para incluir esas bibliotecas y algunos typedefs que se usan en el ejercicio.
+##2  ¿Qué bibliotecas estándar se debieron agregar a API_delay.h para que el código compile? Si las funcionalidades de una API propia crecieran, habría que pensar cuál sería el mejor lugar para incluir esas bibliotecas y algunos typedefs que se usan en el ejercicio.
 	Las bibliotecas a utilizar son <stdbool>, <stdint> y <stddef> 
-#3 ¿Es adecuado el control de los parámetros pasados por el usuario que se hace en las funciones implementadas? ¿Se controla que sean valores válidos? ¿Se controla que estén dentro de los rangos correctos?
+##3 ¿Es adecuado el control de los parámetros pasados por el usuario que se hace en las funciones implementadas? ¿Se controla que sean valores válidos? ¿Se controla que estén dentro de los rangos correctos?
 	Si, se controlan los parámetros. En el caso de que crezca, se debe ver la forma de implementar metodos getters y setters para modificar
 	los parámetros dentro de si misma, y tratando de encapsular la mayor parte del comportamiento cuando sea posible 
 	

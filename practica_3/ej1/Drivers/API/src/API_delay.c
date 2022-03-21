@@ -10,12 +10,6 @@
 #include "stm32f4xx_hal.h"
 #include "API_delay.h"
 
-/**
- * @brief inicia el
- *
- * @param
- * @param duration
- */
 void delayInit( delay_t * delay, tick_t duration )
 {
 
@@ -27,12 +21,7 @@ void delayInit( delay_t * delay, tick_t duration )
 
 }
 
-/**
- * @brief
- *
- * @param delay
- * @return
- */
+
 bool_t delayRead( delay_t * delay )
 {
 
@@ -59,12 +48,6 @@ bool_t delayRead( delay_t * delay )
 
 }
 
-/**
- * @brief
- *
- * @param delay
- * @param duration
- */
 
 void delayWrite( delay_t * delay, tick_t duration )
 {
