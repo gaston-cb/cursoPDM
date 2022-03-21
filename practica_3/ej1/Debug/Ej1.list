@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00025089  00000000  00000000  00028458  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00008017  00000000  00000000  0004d4e1  2**0
+ 18 .debug_line   00008016  00000000  00000000  0004d4e1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e15ba  00000000  00000000  000554f8  2**0
+ 19 .debug_str    000e15bd  00000000  00000000  000554f7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  00136ab2  2**0
+ 20 .comment      00000053  00000000  00000000  00136ab4  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00001198  00000000  00000000  00136b08  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -354,10 +354,10 @@ Disassembly of section .text:
  80004e2:	bf00      	nop
 
 080004e4 <delayInit>:
- *
- * @param
- * @param duration
- */
+#include <stddef.h>
+#include "stm32f4xx_hal.h"
+#include "API_delay.h"
+
 void delayInit( delay_t * delay, tick_t duration )
 {
  80004e4:	b480      	push	{r7}
@@ -391,10 +391,8 @@ void delayInit( delay_t * delay, tick_t duration )
  800050c:	4770      	bx	lr
 
 0800050e <delayRead>:
- *
- * @param delay
- * @return
- */
+
+
 bool_t delayRead( delay_t * delay )
 {
  800050e:	b580      	push	{r7, lr}
@@ -473,9 +471,7 @@ bool_t delayRead( delay_t * delay )
  800057a:	bd80      	pop	{r7, pc}
 
 0800057c <delayWrite>:
- * @param delay
- * @param duration
- */
+
 
 void delayWrite( delay_t * delay, tick_t duration )
 {
@@ -3528,10 +3524,6 @@ int main(void)
  80016e6:	f000 f883 	bl	80017f0 <SystemClock_Config>
 #if SEQUENCE_LEDS==1
   uint8_t seq_led[3] = {LED1,LED2,LED3} ;
-#elif SEQUENCE_LEDS==2
-  uint8_t seq_led[3] = {LED1,LED3,LED2} ;
-#elif SEQUENCE_LEDS==3
-  uint8_t seq_led[3] = {LED2,LED3,LED1} ;
  80016ea:	4a3d      	ldr	r2, [pc, #244]	; (80017e0 <main+0x104>)
  80016ec:	1d3b      	adds	r3, r7, #4
  80016ee:	6812      	ldr	r2, [r2, #0]
@@ -3556,7 +3548,7 @@ int main(void)
  8001708:	f7fe ff52 	bl	80005b0 <BSP_LED_Init>
   /*initialize toogle time leds */
   delayInit(&toogle_led,TIME_LED_ONE ) ;
- 800170c:	f44f 71fa 	mov.w	r1, #500	; 0x1f4
+ 800170c:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  8001710:	4834      	ldr	r0, [pc, #208]	; (80017e4 <main+0x108>)
  8001712:	f7fe fee7 	bl	80004e4 <delayInit>
   uint8_t index_leds = 0 ;
@@ -3642,19 +3634,19 @@ int main(void)
 		  		  break ;
  80017b0:	e013      	b.n	80017da <main+0xfe>
 		  		  delayWrite(&toogle_led, TIME_LED_ONE) ;
- 80017b2:	f44f 71fa 	mov.w	r1, #500	; 0x1f4
+ 80017b2:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  80017b6:	480b      	ldr	r0, [pc, #44]	; (80017e4 <main+0x108>)
  80017b8:	f7fe fee0 	bl	800057c <delayWrite>
 		  		  break ;
  80017bc:	e00e      	b.n	80017dc <main+0x100>
 		  		  delayWrite(&toogle_led, TIME_LED_TWO) ;
- 80017be:	f44f 71fa 	mov.w	r1, #500	; 0x1f4
+ 80017be:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  80017c2:	4808      	ldr	r0, [pc, #32]	; (80017e4 <main+0x108>)
  80017c4:	f7fe feda 	bl	800057c <delayWrite>
 		  		  break ;
  80017c8:	e008      	b.n	80017dc <main+0x100>
            	  	  delayWrite(&toogle_led, TIME_LED_TRHEE) ;
- 80017ca:	f44f 71fa 	mov.w	r1, #500	; 0x1f4
+ 80017ca:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  80017ce:	4805      	ldr	r0, [pc, #20]	; (80017e4 <main+0x108>)
  80017d0:	f7fe fed4 	bl	800057c <delayWrite>
 		  		  break ;

@@ -33,14 +33,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define TIME_LED_ONE   500 //time in ms
-#define TIME_LED_TWO   500 //time in ms
-#define TIME_LED_TRHEE 500 //time in ms
+#define TIME_LED_ONE   1000 //time in ms
+#define TIME_LED_TWO   1000 //time in ms
+#define TIME_LED_TRHEE 1000 //time in ms
 
 // UNCOMMENTS TO SEQUENCE SELECT TO USER
-//#define SEQUENCE_LEDS  1  //SEQ: LED1 LED2 LED3
+#define SEQUENCE_LEDS  1  //SEQ: LED1 LED2 LED3
 //#define SEQUENCE_LEDS 2 //SEQ: LED1 LED3 LED2
-#define SEQUENCE_LEDS 3 //SEQ: LED2 LED3 LED1
+//#define SEQUENCE_LEDS 3 //SEQ: LED2 LED3 LED1
 //#define SEQUENCE_LEDS 4 //SEQ: LED2 LED1 LED3
 //#define SEQUENCE_LEDS 5 //SEQ: LED3 LED2 LED1
 //#define SEQUENCE_LEDS 6 //SEQ: LED3 LED1 LED2
