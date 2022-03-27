@@ -22,8 +22,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "API_delay.h"
+#include "API_debounce.h"
 // TIME_TOOGLE_LED_1 units is ms
-#define TIME_TOOGLE_LED_1 200
+#define TIME_TOOGLE_LED_1 100
 #define TIME_TOOGLE_LED_2 500
 
 /** @addtogroup STM32F4xx_HAL_Examples
@@ -72,23 +73,48 @@ int main(void)
        - Low Level Initialization
      */
   HAL_Init();
-
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO) ;
   BSP_LED_Init(LED2) ;
+
+
+  debounceFSM_init();
+
   delayInit(&toogle_period_led,TIME_TOOGLE_LED_1) ;
   delayRead(&toogle_period_led) ;
   while (1)
   {
-	  if (readKey()== true){
-
+	  //execute the FSM and change the states
+	  debounceFSM_update() ;
+	  // si se oprimio el boton de usuario de la placa nucleo-144
+	  if (readKey() == true)
+	  {
+		  if (toogle_period_led.duration == (tick_t) TIME_TOOGLE_LED_1)
+		  {
+			  toogle_period_led.running = false ;
+			  delayWrite(&toogle_period_led, TIME_TOOGLE_LED_2) ;
+		  }else{
+			  toogle_period_led.running = false ;
+			  delayWrite(&toogle_period_led, TIME_TOOGLE_LED_1) ;
+		  }
 	  }
-	  // select time toogle led ;
+
+	  if (delayRead(&toogle_period_led) == true)
+	  {
+		  delayInit(&toogle_period_led,toogle_period_led.duration ) ;
+		  toogle_period_led.running = false ;
+		  BSP_LED_Toggle(LED2) ;
+	  }
+
 
   }
 }
 
+/* preguntas !
+¿Es adecuado el control de los parámetros pasados por el usuario que se hace en las funciones implementadas? ¿Se controla que sean valores válidos? ¿Se controla que estén dentro de los rangos correctos?
+¿Se nota una mejora en la detección de las pulsaciones respecto a la práctica 0?
+*/
 
 /**
   * @brief  System Clock Configuration

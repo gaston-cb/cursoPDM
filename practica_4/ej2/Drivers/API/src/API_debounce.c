@@ -12,7 +12,6 @@
 #define  STATE_BUTTON_NO_PRESS 1
 #define  TIME_FALLING_READ 40 //time unit is ms -> TIME USING BASSED IN EXPERIENCE
 
-static bool_t readKey();
 static void buttonPressed() ;
 static void buttonReleased() ;
 typedef enum{
@@ -116,15 +115,18 @@ static void buttonPressed() {
  */
 static void buttonReleased(){
 	state_button = BUTTON_UP;
+	button_key = false  ;
 
 }
 
 
 // true -> flanco descendente
 // pasa de true a false, antes de responder true !
-static bool_t readKey(){
+bool_t readKey(){
 //	button_key = false ??
 	bool_t response = button_key ;
-	button_key = button_key == true ?false : true;
+	if (button_key == true ){
+		button_key = false ;
+	}
 	return response ;
 }
