@@ -99,7 +99,7 @@ void debounceFSM_update(){
 /**
  * @brief
  * Evento al presionar el pulsador, idealmente debe recibir un puntero a funcion
- * Flanco descendente !
+ * pone button_key en true cuando se detecta un flanco descendente !
  */
 
 static void buttonPressed() {
@@ -110,7 +110,7 @@ static void buttonPressed() {
 }
 
 /**
- * @brief evento que ocurre al realizar el paso entre raising y UP
+ * @brief evento que ocurre al realizar el paso entre RAISING y UP
  *
  */
 static void buttonReleased(){
@@ -118,10 +118,12 @@ static void buttonReleased(){
 	button_key = false  ;
 
 }
-
-
-// true -> flanco descendente
-// pasa de true a false, antes de responder true !
+/**
+ * @brief Si hay flanco descendente, se cambia de true a false, para detectar una sola
+ * 		  vez la pulsación de la tecla
+ *
+ * @return true: flanco descendente
+ */
 bool_t readKey(){
 //	button_key = false ??
 	bool_t response = button_key ;

@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  000252e5  00000000  00000000  000288e0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00008a7c  00000000  00000000  0004dbc5  2**0
+ 18 .debug_line   00008a7d  00000000  00000000  0004dbc5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e16cb  00000000  00000000  00056641  2**0
+ 19 .debug_str    000e16cb  00000000  00000000  00056642  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  00137d0c  2**0
+ 20 .comment      00000053  00000000  00000000  00137d0d  2**0
                   CONTENTS, READONLY
  21 .debug_frame  00001248  00000000  00000000  00137d60  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -540,7 +540,7 @@ void debounceFSM_update(){
 080005e4 <buttonPressed>:
  * @brief
  * Evento al presionar el pulsador, idealmente debe recibir un puntero a funcion
- * Flanco descendente !
+ * pone button_key en true cuando se detecta un flanco descendente !
  */
 
 static void buttonPressed() {
@@ -568,7 +568,7 @@ static void buttonPressed() {
 08000608 <buttonReleased>:
 
 /**
- * @brief evento que ocurre al realizar el paso entre raising y UP
+ * @brief evento que ocurre al realizar el paso entre RAISING y UP
  *
  */
 static void buttonReleased(){
@@ -593,10 +593,11 @@ static void buttonReleased(){
  8000628:	20000038 	.word	0x20000038
 
 0800062c <readKey>:
-
-
-// true -> flanco descendente
-// pasa de true a false, antes de responder true !
+ * @brief Si hay flanco descendente, se cambia de true a false, para detectar una sola
+ * 		  vez la pulsación de la tecla
+ *
+ * @return true: flanco descendente
+ */
 bool_t readKey(){
  800062c:	b480      	push	{r7}
  800062e:	b083      	sub	sp, #12

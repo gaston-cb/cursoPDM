@@ -3,7 +3,8 @@
   * @file    main.c
   * @author  Gastón Valdez
   * @brief   Se implementa una API para leer el estado de un pulsador
-  * 		 de la placa STM32F4 con sistema antirrebotes
+  * 		 de la placa STM32F4 con sistema antirrebotes.
+  * 		 Archivo ejemplo de uso de la API
   * 		 Curso Programación de microprocesadores FIUBA.
   ******************************************************************************
   * @attention
@@ -111,10 +112,6 @@ int main(void)
   }
 }
 
-/* preguntas !
-¿Es adecuado el control de los parámetros pasados por el usuario que se hace en las funciones implementadas? ¿Se controla que sean valores válidos? ¿Se controla que estén dentro de los rangos correctos?
-¿Se nota una mejora en la detección de las pulsaciones respecto a la práctica 0?
-*/
 
 /**
   * @brief  System Clock Configuration
