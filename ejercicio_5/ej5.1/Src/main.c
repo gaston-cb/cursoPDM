@@ -34,13 +34,13 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
-//#ifdef __GNUC__
+#ifdef __GNUC__ //using printf
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
    set to 'Yes') calls __io_putchar() */
-//#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-//#else
-//#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-//#endif /* __GNUC__ */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 //*/
 
 
@@ -76,6 +76,8 @@ int main(void)
 	HAL_Init();
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
+	BSP_LED_Init(LED1)  ;
+
   	BSP_LED_Init(LED2)  ;
 	BSP_LED_Init(LED3)  ;
 	if (uartinit()==false){
@@ -84,19 +86,17 @@ int main(void)
 		BSP_LED_On(LED2);
 
 	}
-	const char str[] = "data rx using isr callbacks with HAL =)" ;
-	const char str1[] = "hola terminal maldita! world\r\n" ;
-
+	uint8_t str[] = "true\r\n" ;
+	uint8_t str1[] = "false\r\n" ;
+	//uartsendString(&str) ;
+	BSP_LED_On(LED1)  ;
+	bool rx = getRx() ;
     /* Infinite loop */
      while (1)
     {
-
-    	 if (getRx()==true){
-    		 BSP_LED_Toggle(LED3);
-    		 setRx() ;
+    	 if (rx  == true){
+        	 uartsendString(str) ;
     	 }
-
-
 
     }
 }
