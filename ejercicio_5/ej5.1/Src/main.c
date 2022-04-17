@@ -23,6 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "API_uart.h"
+#include "stm32f4xx_hal_rtc.h"
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
