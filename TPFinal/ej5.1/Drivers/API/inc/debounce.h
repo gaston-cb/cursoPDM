@@ -5,8 +5,8 @@
  *      Author: gaston
  */
 
-#ifndef API_INC_API_DEBOUNCE_H_
-#define API_INC_API_DEBOUNCE_H_
+#ifndef API_INC_DEBOUNCE_H_
+#define API_INC_DEBOUNCE_H_
 /**
  * @brief Inicializa una FSM para realizar un antirrebotes
  *
@@ -29,4 +29,4 @@ bool_t readKey();
 
 
 
-#endif /* API_INC_API_DEBOUNCE_H_ */
+#endif /* API_INC_DEBOUNCE_H_ */

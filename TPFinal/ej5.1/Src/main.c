@@ -22,14 +22,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "API_uart.h"
 #include "stm32f4xx_hal.h"
 #include "rtc.h"
-#include <time.h>
-
-//#include "stm32f4xx_hal_mmc.h"
-#define UNIR_CAD(x) GPIO_PIN_ ## x
-// #define UNIR_CAD(x) GPIO_PIN_ ## x
+#include <uart.h>
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -73,25 +68,16 @@ int main(void)
        - Set NVIC Group Priority to 4
        - Low Level Initialization
      */
-
 	HAL_Init();
-	BSP_LED_Init(LED1);
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
-	uartinit() ;
-	rtcInit() ;
+	rtcInit()  ;
     /* Infinite loop */
-	selectPortButton('a', 15)  ;
-	BSP_LED_On(LED1) ;
+
 	while (1)
     {
 		//GPIO_PinState
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15)== GPIO_PIN_RESET){ ;
-
-		printRTCParameters();
-
-		}
     }
 
 }

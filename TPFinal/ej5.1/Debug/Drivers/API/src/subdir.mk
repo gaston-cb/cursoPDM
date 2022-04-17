@@ -5,22 +5,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Drivers/API/src/API_debounce.c \
 ../Drivers/API/src/API_delay.c \
-../Drivers/API/src/API_uart.c \
-../Drivers/API/src/rtc.c 
+../Drivers/API/src/debounce.c \
+../Drivers/API/src/rtc.c \
+../Drivers/API/src/uart.c 
 
 OBJS += \
-./Drivers/API/src/API_debounce.o \
 ./Drivers/API/src/API_delay.o \
-./Drivers/API/src/API_uart.o \
-./Drivers/API/src/rtc.o 
+./Drivers/API/src/debounce.o \
+./Drivers/API/src/rtc.o \
+./Drivers/API/src/uart.o 
 
 C_DEPS += \
-./Drivers/API/src/API_debounce.d \
 ./Drivers/API/src/API_delay.d \
-./Drivers/API/src/API_uart.d \
-./Drivers/API/src/rtc.d 
+./Drivers/API/src/debounce.d \
+./Drivers/API/src/rtc.d \
+./Drivers/API/src/uart.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -30,7 +30,7 @@ Drivers/API/src/%.o: ../Drivers/API/src/%.c Drivers/API/src/subdir.mk
 clean: clean-Drivers-2f-API-2f-src
 
 clean-Drivers-2f-API-2f-src:
-	-$(RM) ./Drivers/API/src/API_debounce.d ./Drivers/API/src/API_debounce.o ./Drivers/API/src/API_delay.d ./Drivers/API/src/API_delay.o ./Drivers/API/src/API_uart.d ./Drivers/API/src/API_uart.o ./Drivers/API/src/rtc.d ./Drivers/API/src/rtc.o
+	-$(RM) ./Drivers/API/src/API_delay.d ./Drivers/API/src/API_delay.o ./Drivers/API/src/debounce.d ./Drivers/API/src/debounce.o ./Drivers/API/src/rtc.d ./Drivers/API/src/rtc.o ./Drivers/API/src/uart.d ./Drivers/API/src/uart.o
 
 .PHONY: clean-Drivers-2f-API-2f-src
 
