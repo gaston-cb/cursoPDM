@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <uart.h>
 #include "rtc.h"
+#define LONGITUD_TERRESTRE -15.21;
+
 #define ERROR_RTC_DATE 0x03
 #define ERROR_RTC_TIME 0x02
 #define NO_ERROR_GET_RTC 0x01
@@ -109,30 +111,42 @@ static void setDayAndHour(void)
 }
 
 
-uint8_t computeSiderealTime(sidereal_t *sidedreal_time){
+/**
+ * @brief Calcula la hora siderea a partir de la hora local utilizando el algoritmo de
+ * 		  fulanito (http://...)
+ *
+ * @param sidereal_time: Parámetro donde se va a cargar la hora siderea calculada. En caso de error
+ * 		  al realizar el cálculo se carga un parámetro NULL
+ * @return Retorna si se ha realizado o no correctamente el cálculo de la hora siderea
+ */
+uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 	fecha_t sd_time = getDateTime() ;
 	uint8_t error ;
-	if (sd_time.error == 1 )
+	if (sd_time.error == ERROR_RTC_DATE ||  sd_time.error == ERROR_RTC_TIME)
 	{
+		sidereal_time = NULL  ;
 		error = 1 ;
 	}else{
+		//calc siderealTime ;
 		error = 0 ;
-
 	}
 	return error ;
 
 }
 
 
+
+
 /**
  * @brief  Realiza la lectura del sistema RTC para realizar el cálculo de la hora sidereal.
+ * 		   Al devolve
  *
  * @return Devuelve la lectura de la hora y fecha del RTC. En caso de error, el campo error
  * 		   de la estructura fecha_t: 2: error al obtener el tiempo
  * 		   							 3:  error al obtener la hora del RTC
+ * 		   Al usar esta estructura se prescinde de la libreria "time.h" nativa de C
+ *
  */
-
-
 fecha_t getDateTime()
 {
 	RTC_DateTypeDef sdatestructureget ;
@@ -145,6 +159,7 @@ fecha_t getDateTime()
 	}else{
 		if(HAL_RTC_GetDate(&rtc, &sdatestructureget, RTC_FORMAT_BIN) == HAL_OK)
 		{
+			//lectura del RTC de la placa nucleo y carga de valores en fecha_t
 			response.year = sdatestructureget.Year ;
 			response.day = sdatestructureget.Date;
 			response.month = sdatestructureget.Month ;
