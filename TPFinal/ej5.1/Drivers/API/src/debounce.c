@@ -4,131 +4,151 @@
  *  Created on: 26 mar. 2022
  *      Author: gaston
  */
-#include <stdbool.h>
-#include "API_delay.h"
-#include "stm32f4xx_hal.h"  		/* <- HAL include */
-#include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
-#define  STATE_BUTTON_PRESS 0
-#define  STATE_BUTTON_NO_PRESS 1
-#define  TIME_FALLING_READ 40 //time unit is ms -> TIME USING BASSED IN EXPERIENCE
-
-static void buttonPressed() ;
-static void buttonReleased() ;
-typedef enum{
-	BUTTON_UP,
-	BUTTON_FALLING,
-	BUTTON_DOWN,
-	BUTTON_RAISING
-}debounceState_t ;
+#include <stdint.h>
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_nucleo_144.h"
+#include <debounce.h>
 
 
-bool_t button_key = false ;
-debounceState_t state_button ;
-delay_t time_read_state_fsm ;
+static uint32_t selectGPIOport(uint8_t numport);
+
+void selectPortButton(char p, uint8_t num_port){
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT ;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Pin = selectGPIOport(num_port);
+	// if port== 0 - port0 , port == 1 , port1 ....
 
 
-/// debe cargar el estado inicial
-void debounceFSM_init(){
-	state_button = BUTTON_UP ;
-}
+	switch(p){
+	case 'a':
+	case 'A':
+    	__HAL_RCC_GPIOA_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    	break ;
+	case 'b':
+	case 'B':
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-
-/**
- * @brief
- * FSM QUE REALIZA UN SISTEMA ANTIREBOTES DE UN PULSADOR
- * Se implementa una máquina de estados de la siguientes estados
- * Estado inicial: BUTTON_UP
- * BUTTON_UP <-> BUTTON_FALLING <->BUTTON_DOWN <-> BUTTON_RAISING ->BUTTON_UP
- *
- */
-void debounceFSM_update(){
-	// Devuelve 0 sin presionar, 1  con boton presionado
-
-
-	switch(state_button)
-	{
-		case BUTTON_UP:
-			if (BSP_PB_GetState(BUTTON_USER) == STATE_BUTTON_PRESS)
-			{
-				state_button = BUTTON_FALLING ;
-				delayInit(&time_read_state_fsm,TIME_FALLING_READ) ;
-				delayRead(&time_read_state_fsm) ; // init the timer count
-			}
-			break ;
-		case BUTTON_FALLING:
-			//espera 40 ms y lee el estado del boton
-			if (delayRead(&time_read_state_fsm)==true)
-			{
-				time_read_state_fsm.running = false ;
-				if (BSP_PB_GetState(BUTTON_USER) == STATE_BUTTON_PRESS)
-				{
-					buttonPressed() ;
-				}else{
-					state_button = BUTTON_UP ;
-				}
-			}
-			break ;
-		case BUTTON_DOWN:
-			if (BSP_PB_GetState(BUTTON_USER) == STATE_BUTTON_NO_PRESS)
-			{
-				state_button = BUTTON_RAISING ;
-				delayInit(&time_read_state_fsm,TIME_FALLING_READ) ;
-				delayRead(&time_read_state_fsm) ; // init the timer count
-			}
-			break ;
-		case BUTTON_RAISING:
-			if (delayRead(&time_read_state_fsm)==true)
-			{
-				if (BSP_PB_GetState(BUTTON_USER) == STATE_BUTTON_NO_PRESS)
-				{
-					state_button = BUTTON_UP ;
-					time_read_state_fsm.running = false ;
-					buttonReleased();
-				}else state_button = BUTTON_DOWN ;
-			}
-			break ;
-		default:
-			debounceFSM_init() ;
 		break ;
+	case 'c':
+	case 'C':
+		__HAL_RCC_GPIOC_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+		break ;
+	case 'd':
+	case 'D':
+		__HAL_RCC_GPIOD_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+		break ;
+	case 'e':
+	case 'E':
+		__HAL_RCC_GPIOE_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+		break ;
+	case 'f':
+	case 'F':
+		__HAL_RCC_GPIOF_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+		break ;
+	case 'g':
+	case 'G':
+		__HAL_RCC_GPIOG_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+		break ;
+	case 'h':
+	case 'H':
+		__HAL_RCC_GPIOH_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+
+		break ;
+	case 'i':
+	case 'I':
+		__HAL_RCC_GPIOI_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+
+		break ;
+	case 'j':
+	case 'J':
+		__HAL_RCC_GPIOJ_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
+
+		break ;
+	case 'k':
+	case 'K':
+		__HAL_RCC_GPIOK_CLK_ENABLE();
+    	HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+
+		break ;
+	default:
+		//management of error
+		break ;
 	}
 
 }
 
-
-/**
- * @brief
- * Evento al presionar el pulsador, idealmente debe recibir un puntero a funcion
- * pone button_key en true cuando se detecta un flanco descendente !
- */
-
-static void buttonPressed() {
-	state_button = BUTTON_DOWN;
-	button_key = true ;
-
-
-}
-
-/**
- * @brief evento que ocurre al realizar el paso entre RAISING y UP
- *
- */
-static void buttonReleased(){
-	state_button = BUTTON_UP;
-	button_key = false  ;
-
-}
-/**
- * @brief Si hay flanco descendente, se cambia de true a false, para detectar una sola
- * 		  vez la pulsación de la tecla
- *
- * @return true: flanco descendente
- */
-bool_t readKey(){
-//	button_key = false ??
-	bool_t response = button_key ;
-	if (button_key == true ){
-		button_key = false ;
+static uint32_t selectGPIOport(uint8_t numport){
+	uint32_t responsePortNumber ;
+	switch(numport){
+	case 0:
+		responsePortNumber = GPIO_PIN_0 ;
+		break ;
+	case 1:
+		responsePortNumber = GPIO_PIN_1 ;
+		break ;
+	case 2:
+		responsePortNumber = GPIO_PIN_2 ;
+		break ;
+	case 3:
+		responsePortNumber = GPIO_PIN_3 ;
+		break ;
+	case 4:
+		responsePortNumber = GPIO_PIN_4 ;
+		break ;
+	case 5:
+		responsePortNumber = GPIO_PIN_5 ;
+		break ;
+	case 6:
+		responsePortNumber = GPIO_PIN_6 ;
+		break ;
+	case 7:
+		responsePortNumber = GPIO_PIN_7 ;
+		break ;
+	case 8:
+		responsePortNumber = GPIO_PIN_8 ;
+		break ;
+	case 9:
+		responsePortNumber = GPIO_PIN_9 ;
+		break ;
+	case 10:
+		responsePortNumber = GPIO_PIN_10 ;
+		break ;
+	case 11:
+		responsePortNumber = GPIO_PIN_11 ;
+		break ;
+	case 12:
+		responsePortNumber = GPIO_PIN_12 ;
+		break ;
+	case 13:
+		responsePortNumber = GPIO_PIN_13;
+		break ;
+	case 14:
+		responsePortNumber = GPIO_PIN_14 ;
+		break ;
+	case 15:
+		responsePortNumber = GPIO_PIN_14 ;
+		break ;
+	default:
+		responsePortNumber = -1 ;
+		break ;
 	}
-	return response ;
+	return responsePortNumber ;
+
 }

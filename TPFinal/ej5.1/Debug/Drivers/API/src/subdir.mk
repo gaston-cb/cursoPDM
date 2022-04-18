@@ -5,20 +5,20 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Drivers/API/src/API_delay.c \
 ../Drivers/API/src/debounce.c \
+../Drivers/API/src/handle_FSM.c \
 ../Drivers/API/src/rtc.c \
 ../Drivers/API/src/uart.c 
 
 OBJS += \
-./Drivers/API/src/API_delay.o \
 ./Drivers/API/src/debounce.o \
+./Drivers/API/src/handle_FSM.o \
 ./Drivers/API/src/rtc.o \
 ./Drivers/API/src/uart.o 
 
 C_DEPS += \
-./Drivers/API/src/API_delay.d \
 ./Drivers/API/src/debounce.d \
+./Drivers/API/src/handle_FSM.d \
 ./Drivers/API/src/rtc.d \
 ./Drivers/API/src/uart.d 
 
@@ -30,7 +30,7 @@ Drivers/API/src/%.o: ../Drivers/API/src/%.c Drivers/API/src/subdir.mk
 clean: clean-Drivers-2f-API-2f-src
 
 clean-Drivers-2f-API-2f-src:
-	-$(RM) ./Drivers/API/src/API_delay.d ./Drivers/API/src/API_delay.o ./Drivers/API/src/debounce.d ./Drivers/API/src/debounce.o ./Drivers/API/src/rtc.d ./Drivers/API/src/rtc.o ./Drivers/API/src/uart.d ./Drivers/API/src/uart.o
+	-$(RM) ./Drivers/API/src/debounce.d ./Drivers/API/src/debounce.o ./Drivers/API/src/handle_FSM.d ./Drivers/API/src/handle_FSM.o ./Drivers/API/src/rtc.d ./Drivers/API/src/rtc.o ./Drivers/API/src/uart.d ./Drivers/API/src/uart.o
 
 .PHONY: clean-Drivers-2f-API-2f-src
 

@@ -49,13 +49,13 @@ void rtcInit()
 	__HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSE) ;
 	__HAL_RCC_RTC_ENABLE();
 	rtc.Instance = RTC;
-	rtc.Init.HourFormat = RTC_HOURFORMAT_12;
+	rtc.Init.HourFormat = RTC_HOURFORMAT_24;
 	rtc.Init.AsynchPrediv = 127;
 	rtc.Init.SynchPrediv = 255;
 	rtc.Init.OutPut = RTC_OUTPUT_DISABLE;
 	rtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 	rtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-	// verifica si el RTC se inica correctamente
+	// verifica si el RTC se inicia correctamente
 	if (HAL_RTC_Init(&rtc) != HAL_OK)
 	{
 		BSP_LED_On(LED2) ;
@@ -90,7 +90,7 @@ static void setDayAndHour(void)
 	  {
 	     //uartSendString("\r\nerror set Time\r\n") ;
 	   }
-	  // FECHA EN FORMATO J2000: (1° de enero del año 2000, 12:00:00 GMT)
+	   // FECHA EN FORMATO J2000: (1° de enero del año 2000, 12:00:00 GMT)
 	   sDate.WeekDay = RTC_WEEKDAY_MONDAY;
 	   sDate.Month = RTC_MONTH_JANUARY;
 	   sDate.Date = 1;

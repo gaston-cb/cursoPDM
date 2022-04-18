@@ -7,9 +7,11 @@
 #include <stm32f4xx_hal.h>
 #include <stm32f4xx_hal_uart.h>
 #include <stm32f4xx_hal_usart.h>
-
 #include <string.h>
 #include <uart.h>
+//#define ERROR_UART
+
+
 
 static void uartSendString( char *uart_tx) ;
 

@@ -57,13 +57,6 @@
 #define USARTx_RX_AF                     GPIO_AF7_USART3
 
 
-typedef enum{
-	BUTTON_UP,
-	BUTTON_FALLING,
-	BUTTON_DOWN,
-	BUTTON_RAISING
-}debounceState_t ;
-
 
 /* Exported macro ------------------------------------------------------------*/
 
