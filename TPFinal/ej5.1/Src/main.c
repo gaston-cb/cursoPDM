@@ -6,6 +6,7 @@
   * 		 la FIUBA
   * 		 Cálculo de hora siderea en base a hora local usando el RTC de la
   * 		 placa nucleo 144
+  * 		 Este dato se envía por puerto serie al presionar e
   ******************************************************************************
   * @attention
   *
@@ -70,13 +71,13 @@ int main(void)
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
+	uartInit(9600) ;
 	initFSM()  ;
 	/* Infinite loop */
 
 	while (1)
     {
 		FSM_loop()  ;
-		//GPIO_PinState
     }
 
 }

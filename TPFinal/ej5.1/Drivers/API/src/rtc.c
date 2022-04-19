@@ -10,17 +10,32 @@
 #include "stm32f4xx_nucleo_144.h"
 #include "stm32f4xx_hal_rtc.h"
 #include "stm32f4xx_hal_rtc_ex.h"
+#include "math.h"
 #include <stdio.h>
 #include <uart.h>
 #include "rtc.h"
-#define LONGITUD_TERRESTRE -15.21;
+// Constantes para el cálculo de la hora sidereal usando el algoritmo del
+// constantes para calculo de día juliano y centuras julianas
+#define K1 367.0
+#define K2 275.0
+#define K3 9.0
+#define K4 1721013.5
+#define K5 7.0/4.0 ;
+#define HOURS_PER_DAY 24.0
+#define J200_UT 2451545
+#define CENTURIAS_JULIANAS 36525
+// constantes para el cálculo de la hora siderea
+#define KS1 100.4606184
+#define KS2 36000.7700
+#define KS3 0.000387933
+#define KS4 -2.583E-8
 
+#define UTC_ARGENTINA -3
 #define ERROR_RTC_DATE 0x03
 #define ERROR_RTC_TIME 0x02
 #define NO_ERROR_GET_RTC 0x01
-
-#define ERROR_SIDEREAL_DATE
-#define ERROR_SIDEREAL_TIME
+#define ERROR_SIDEREAL 0xFF
+#define NO_ERROR_SIDEREAL 0x01
 
 typedef struct {
 	uint16_t year;
@@ -79,7 +94,9 @@ static void setDayAndHour(void)
 
 	  RTC_TimeTypeDef sTime = {0};
 	  RTC_DateTypeDef sDate = {0};
-	  //	  uint8_t hora =
+	  // Se obtiene la hora de compilación y se carga como valor inicial en el RTC.
+	  // Dado que __TIME__[0] ... son variables de tipo char, se le resta 0x30 para obtener
+	  // el entero correspondiente.
 	  sTime.Hours = (__TIME__[0] - 0x30)*10 + __TIME__[1] - 0x30 ;
 	  sTime.Minutes = (__TIME__[3] - 0x30)*10+ __TIME__[4] - 0x30 ;
 	  sTime.Seconds = 10;
@@ -122,13 +139,44 @@ static void setDayAndHour(void)
 uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 	fecha_t sd_time = getDateTime() ;
 	uint8_t error ;
+	uint8_t hs,ms,ss ;
+	const float multiplicador_term_negativo = (7.0/4.0) ;
+	// j0 calcula el número de dias julianos
+	float j0,fract_day,sid_time,jul_cent ; // dia juliano hasta las 12:00:00. JD fraccion de dia para completar el día
+	float negative_term ;
+	// Error de lectura en día o fecha en el RTC
 	if (sd_time.error == ERROR_RTC_DATE ||  sd_time.error == ERROR_RTC_TIME)
 	{
 		sidereal_time = NULL  ;
-		error = 1 ;
+		error = ERROR_SIDEREAL ;
 	}else{
-		//calc siderealTime ;
-		error = 0 ;
+		//
+		// (float)(int): primero se realiza  (int) para cumplir con el algoritmo
+		// pide la parte entera del término. Luego se transforma a flotante para realizar
+		// la suma
+		j0 = K1*sd_time.year + (float) (int )(K2*(float)sd_time.month/K3)
+			+ (float) sd_time.day +  K4 ;
+		negative_term =(float) (int) (multiplicador_term_negativo *((float )sd_time.year
+					   + (int)(float)((sd_time.month+9.0)/12.0))) ;
+		j0 = j0-negative_term ;
+		fract_day = (float) sd_time.hour +  (float)sd_time.minute/60.0
+					+ (float)sd_time.second/3600.0 ;
+		// calculo de centurias julianas
+		jul_cent = (j0 - 2451545)/36525 ;
+		sid_time = KS1 + KS2 * jul_cent + KS3 * pow(jul_cent,2) + KS4 * pow(jul_cent,3) ;
+    	// el cálculo anterior sid_time puede ser mayor a 360°. Para quedarnos con el giro que corresponde
+		// a la unidad angular restamos 360°. Lo calculado esta a las 12:00:00. Se debe pasar a UTC con UTC/24
+		sid_time = sid_time - (float) (int)(sid_time/360.0) * 360.0 ;
+		// Puede ser superior a 360°, idem al caso anterior
+		sid_time = sid_time + 360.98564724*(fract_day/24.0);
+		sid_time = sid_time - (float) (int)(sid_time/360.0) * 360.0 ;
+		// transformación a hora, minuto y segundo: 360° -- 24hs, 60min -- 1h y 60s -- 1min
+		hs = (uint8_t) ((sid_time*24)/360.0 ) ;
+		sidereal_time->h = hs ;
+		ms  = (uint8_t)  ((sid_time*24)/360.0  - hs) ;
+		sidereal_time->m = ms ;
+		error = NO_ERROR_SIDEREAL;
+
 	}
 	return error ;
 

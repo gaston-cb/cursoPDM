@@ -9,12 +9,12 @@
 #include "stm32f4xx_nucleo_144.h"
 #include <rtc.h>
 #include <debounce.h>
-//PC-13 PORT_BUTTON DE LA PLACA
-#define LETTER_PORT 'C'
-#define NUMBER_PORT 13
-#define GPIOx GPIO ## C
-#define GPIO_ GPIO ## C
+#include <uart.h>
 
+//PC-13 PORT_BUTTON DE LA PLACA -- reconfigurar para leer por alto (tiene rpulldown) el pcb
+#define LETTER_PORT 'A'
+#define NUMBER_PORT 15
+// GPIO_PIN_15
 
 typedef enum{
  RTCCONFIG ,
@@ -26,7 +26,6 @@ static handle_FSM FSM ; //FIXME: cambiar nombre por un nombre mas representativo
 
 void initFSM(void){
 	FSM = RTCCONFIG ;
-	selectPortButton('c', 13) ;
 }
 
 
@@ -35,18 +34,27 @@ void FSM_loop(){
 	case RTCCONFIG:
 		FSM = WAITBUTTON ;
 		rtcInit() ;
+		initFSMButton('a', 15) ;
+		uartSendString("WAITBUTTON") ;
 		break ;
 	case WAITBUTTON:
+		//uartSendString("updateWAIT\r\n") ;
 
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET){
-			HAL_Delay(10) ;
-			BSP_LED_Toggle(LED1) ;
+		debounceFSM_update() ;
+		if (getPressButton() == true){
+			FSM = SENDSERIALST ;
+			uartSendString("cambiowait to st\r\n") ;
+
 		}
 		break ;
 	case SENDSERIALST:
+		sendSiderealTime() ;
+		// CODE FOR SEND UART
+		uartSendString("sendserialst\r\n") ;
 		FSM = WAITBUTTON ;
 		break ;
 	default:
+
 		FSM = RTCCONFIG ;
 		break  ;
 	}

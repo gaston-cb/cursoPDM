@@ -3,6 +3,8 @@
  *
  *  Created on: 2 abr. 2022
  *      Author: gaston
+ *
+ *
  */
 #include <stm32f4xx_hal.h>
 #include <stm32f4xx_hal_uart.h>
@@ -13,7 +15,7 @@
 
 
 
-static void uartSendString( char *uart_tx) ;
+//static void uartSendString( char *uart_tx) ;
 
 UART_HandleTypeDef uart_handle ;
 
@@ -33,8 +35,9 @@ uint8_t uartInit(uint32_t baud_rate){
 	if (HAL_UART_Init(&uart_handle)){
 		return 0xFF ;
 	}
+	uartSendString("INICIO CORRECTO") ;
 	return 1 ;
-	// dejar para futuras versiones !
+	// dejar para futuras versiones . Resuelve la ISR de RX deUART
 	//HAL_UART_Receive_IT(&uart_handle, data_rx, 2) ;
 	//(&uart_handle, &data_rx, 2) ;
 	//HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
@@ -43,13 +46,31 @@ uint8_t uartInit(uint32_t baud_rate){
 
 }
 
-/*
-uint8_t sendSiderealTime(sidereal_t serial_st){
-	return 1 ;
+
+uint8_t sendSiderealTime(){
+	sidereal_t stime ;
+	char uart_tx [10] ; //"hh:mm:ss" ;
+	uint8_t get_sidereal_time =computeSiderealTime(&stime) ;
+	uint8_t response ;
+	if (get_sidereal_time ==0xFF){
+		//transmitir "error RTC" por puerto serie
+		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,0) ;
+		response = 0xFF ;
+
+	}else if (get_sidereal_time==0x01){
+		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,0) ;
+		response = 0x01 ;
+	}
+
+
+	uartSendString(uart_tx) ;
+	return response ;
+
 }
-*/
+
 //uint8_t uartSendString(const char *uart_tx)
-static void uartSendString( char *uart_tx)
+//static void uartSendString( char *uart_tx)
+void uartSendString( char *uart_tx)
 {
 
 	HAL_UART_Transmit(&uart_handle,uart_tx, strlen(uart_tx), 500) ;
