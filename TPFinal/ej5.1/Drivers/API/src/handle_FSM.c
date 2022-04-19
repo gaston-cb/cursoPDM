@@ -17,9 +17,9 @@
 // GPIO_PIN_15
 
 typedef enum{
- RTCCONFIG ,
- WAITBUTTON,
- SENDSERIALST
+	RTCCONFIG ,
+	WAITBUTTON,
+	SENDSERIALST
 }handle_FSM ;
 
 static handle_FSM FSM ; //FIXME: cambiar nombre por un nombre mas representativo
@@ -35,7 +35,6 @@ void FSM_loop(){
 		FSM = WAITBUTTON ;
 		rtcInit() ;
 		initFSMButton('a', 15) ;
-		sendSiderealTime() ;
 		break ;
 	case WAITBUTTON:
 		//uartSendString("updateWAIT\r\n") ;

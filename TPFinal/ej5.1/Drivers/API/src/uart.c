@@ -54,11 +54,11 @@ uint8_t sendSiderealTime(){
 	uint8_t response ;
 	if (get_sidereal_time ==0xFF){
 		//transmitir "error RTC" por puerto serie
-		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,0) ;
+		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,stime.s) ;
 		response = 0xFF ;
 
 	}else if (get_sidereal_time==0x01){
-		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,0) ;
+		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,stime.s) ;
 		response = 0x01 ;
 	}
 
