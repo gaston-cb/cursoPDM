@@ -35,7 +35,7 @@ uint8_t uartInit(uint32_t baud_rate){
 	if (HAL_UART_Init(&uart_handle)){
 		return 0xFF ;
 	}
-	uartSendString("INICIO CORRECTO") ;
+	uartSendString("INICIO CORRECTO\r\n") ;
 	return 1 ;
 	// dejar para futuras versiones . Resuelve la ISR de RX deUART
 	//HAL_UART_Receive_IT(&uart_handle, data_rx, 2) ;

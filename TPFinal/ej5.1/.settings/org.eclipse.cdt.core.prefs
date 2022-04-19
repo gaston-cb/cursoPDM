@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.775537725/append=true
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.775537725/appendContributed=true
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.775537725/compiler_prefix/delimiter=;
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.775537725/compiler_prefix/operation=append
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.775537725/compiler_prefix/value=-u _printf_float
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.551273777/append=true
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.551273777/appendContributed=true
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.551273777/compiler_prefix/delimiter=;
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.551273777/compiler_prefix/operation=append
+environment/project/com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.551273777/compiler_prefix/value=-u _printf_float

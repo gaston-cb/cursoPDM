@@ -30,7 +30,8 @@
 #define KS3 0.000387933
 #define KS4 -2.583E-8
 
-#define UTC_ARGENTINA -3
+#define LONGITUD_IAR -58.1396
+
 #define ERROR_RTC_DATE 0x03
 #define ERROR_RTC_TIME 0x02
 #define NO_ERROR_GET_RTC 0x01
@@ -140,6 +141,7 @@ uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 	fecha_t sd_time = getDateTime() ;
 	uint8_t error ;
 	uint8_t hs,ms,ss ;
+	char debug_values [20] ;
 	const float multiplicador_term_negativo = (7.0/4.0) ;
 	// j0 calcula el número de dias julianos
 	float j0,fract_day,sid_time,jul_cent ; // dia juliano hasta las 12:00:00. JD fraccion de dia para completar el día
@@ -150,10 +152,7 @@ uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 		sidereal_time = NULL  ;
 		error = ERROR_SIDEREAL ;
 	}else{
-		//
-		// (float)(int): primero se realiza  (int) para cumplir con el algoritmo
-		// pide la parte entera del término. Luego se transforma a flotante para realizar
-		// la suma
+
 		j0 = K1*sd_time.year + (float) (int )(K2*(float)sd_time.month/K3)
 			+ (float) sd_time.day +  K4 ;
 		negative_term =(float) (int) (multiplicador_term_negativo *((float )sd_time.year
@@ -164,17 +163,22 @@ uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 		// calculo de centurias julianas
 		jul_cent = (j0 - 2451545)/36525 ;
 		sid_time = KS1 + KS2 * jul_cent + KS3 * pow(jul_cent,2) + KS4 * pow(jul_cent,3) ;
-    	// el cálculo anterior sid_time puede ser mayor a 360°. Para quedarnos con el giro que corresponde
+		// el cálculo anterior sid_time puede ser mayor a 360°. Para quedarnos con el giro que corresponde
 		// a la unidad angular restamos 360°. Lo calculado esta a las 12:00:00. Se debe pasar a UTC con UTC/24
 		sid_time = sid_time - (float) (int)(sid_time/360.0) * 360.0 ;
 		// Puede ser superior a 360°, idem al caso anterior
 		sid_time = sid_time + 360.98564724*(fract_day/24.0);
 		sid_time = sid_time - (float) (int)(sid_time/360.0) * 360.0 ;
+		sid_time = sid_time + LONGITUD_IAR ;
+		sid_time = sid_time - (float) (int)(sid_time/360.0) * 360.0 ;
+
 		// transformación a hora, minuto y segundo: 360° -- 24hs, 60min -- 1h y 60s -- 1min
-		hs = (uint8_t) ((sid_time*24)/360.0 ) ;
+
+		hs = (uint8_t)(float)((sid_time*24)/360.0 ) ;
 		sidereal_time->h = hs ;
-		ms  = (uint8_t)  ((sid_time*24)/360.0  - hs) ;
-		sidereal_time->m = ms ;
+		ms  = (uint8_t)  ((sid_time*24)/360.0  - hs)/60.0 ;//0.xxxx
+		ss  = (uint8_t) (((float) ms - ((sid_time*24)/360.0  - hs)/60.0)*60.0) // 0.x1 min ;
+		sidereal_time->m = ss ;
 		error = NO_ERROR_SIDEREAL;
 
 	}

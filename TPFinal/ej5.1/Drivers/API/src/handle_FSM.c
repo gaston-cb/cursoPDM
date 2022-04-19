@@ -35,7 +35,7 @@ void FSM_loop(){
 		FSM = WAITBUTTON ;
 		rtcInit() ;
 		initFSMButton('a', 15) ;
-		uartSendString("WAITBUTTON") ;
+		sendSiderealTime() ;
 		break ;
 	case WAITBUTTON:
 		//uartSendString("updateWAIT\r\n") ;
@@ -43,14 +43,12 @@ void FSM_loop(){
 		debounceFSM_update() ;
 		if (getPressButton() == true){
 			FSM = SENDSERIALST ;
-			uartSendString("cambiowait to st\r\n") ;
 
 		}
 		break ;
 	case SENDSERIALST:
 		sendSiderealTime() ;
 		// CODE FOR SEND UART
-		uartSendString("sendserialst\r\n") ;
 		FSM = WAITBUTTON ;
 		break ;
 	default:

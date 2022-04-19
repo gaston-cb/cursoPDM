@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_nucleo_144.h"
+#include <uart.h>
 #include <debounce.h>
 #include <stdbool.h>
 #define  TIME_FALLING_READ 40 //time unit is ms -> TIME USING BASSED IN EXPERIENCE
@@ -25,7 +26,7 @@ static uint32_t selectGPIOport(uint8_t numport);
 static void selectPortButton(char p, uint8_t num_port);
 //static uint32_t gpio_port ;
 static uint16_t number_port ;
-GPIO_TypeDef GPIO_sel ;
+static GPIO_TypeDef *GPIO_sel ;
 static uint32_t tickstart = 0 ;
 
 
@@ -36,7 +37,17 @@ void initFSMButton(char p, uint8_t num_port){
 
 
 
-
+/**
+ * @brief Permite seleccionar en que puerto adicionar un pulsador. Los puertos se refieren como
+ * 		GPIOx donde x es una letra entre A y K
+ * 		num_port: Número de puerto serigrafiado en la placa
+ * 		Ejemplo: si se quiere utilizar el puerto PC10 de la placa nucleo para conectar un pulsador
+ *	 	se debe llamar a la funcion con los parámetros p='c' y num_port = 15.
+ *
+ * @param p: letra de puerto seleccionado
+ * @param num_port: numero de puerto seleccionado
+ *
+ */
 static void selectPortButton(char p, uint8_t num_port){
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -44,14 +55,12 @@ static void selectPortButton(char p, uint8_t num_port){
     GPIO_InitStruct.Pull = GPIO_PULLUP;
 	GPIO_InitStruct.Pin = selectGPIOport(num_port);
 	number_port = GPIO_InitStruct.Pin ;
-	// if port== 0 - port0 , port == 1 , port1 ....
-
 
 	switch(p){
 	case 'a':
 	case 'A':
     	__HAL_RCC_GPIOA_CLK_ENABLE();
-    	GPIO_sel = *GPIOA ;
+    	GPIO_sel = GPIOA ;
 		//HAL_GPIO_Init(&GPIO_sel, &GPIO_InitStruct);
     	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -59,22 +68,22 @@ static void selectPortButton(char p, uint8_t num_port){
 	case 'b':
 	case 'B':
 		__HAL_RCC_GPIOB_CLK_ENABLE();
-		GPIO_sel = *GPIOB ;
-		HAL_GPIO_Init(&GPIO_sel, &GPIO_InitStruct);
+		GPIO_sel = GPIOB ;
+		HAL_GPIO_Init(GPIO_sel, &GPIO_InitStruct);
 
 		break ;
 	case 'c':
 	case 'C':
 		__HAL_RCC_GPIOC_CLK_ENABLE();
-		GPIO_sel = *GPIOC ;
-		HAL_GPIO_Init(&GPIO_sel, &GPIO_InitStruct);
+		GPIO_sel = GPIOC ;
+		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 		break ;
 	case 'd':
 	case 'D':
 		__HAL_RCC_GPIOD_CLK_ENABLE();
-		GPIO_sel = *GPIOD ;
-		HAL_GPIO_Init(&GPIO_sel, &GPIO_InitStruct);
+		GPIO_sel = GPIOD ;
+		HAL_GPIO_Init(GPIO_sel, &GPIO_InitStruct);
 
 		break ;
 	case 'e':
@@ -204,9 +213,8 @@ void debounceFSM_update(){
 		case BUTTON_UP:
 
 
-			if (HAL_GPIO_ReadPin(GPIOA,number_port) ==   GPIO_PIN_RESET )
+			if (HAL_GPIO_ReadPin(GPIO_sel,number_port) ==   GPIO_PIN_RESET )
 			{
-				uartSendString("GPIO_RESET\r\n") ;
 				button_state = BUTTON_FALLING ;
 				tickstart = HAL_GetTick() ;
 			}

@@ -26,6 +26,7 @@
 #include "stm32f4xx_hal.h"
 #include <uart.h>
 #include <handle_FSM.h>
+#define CLOCK_CONFIG_RTC
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
