@@ -30,15 +30,16 @@
 #define KS3 0.000387933
 #define KS4 -2.583E-8
 #define LONGITUD_IAR -58.1396
-
+// definición de constantes de error
 #define ERROR_RTC_DATE 0x03
 #define ERROR_RTC_TIME 0x02
 #define NO_ERROR_GET_RTC 0x01
 #define ERROR_SIDEREAL 0xFF
 #define NO_ERROR_SIDEREAL 0x01
-
+// cálculo para transformar de char a int, a partir de unidades y decenas.
 #define CHAR_TO_INT 0x30
 #define DECIMAL_INT 10
+// número de mes
 #define MONTH_COMPILATION  (__DATE__ [2] == 'n' ? (__DATE__ [1] == 'a' ? 1 : 6) \
 : __DATE__ [2] == 'b' ? 2 \
 : __DATE__ [2] == 'r' ? (__DATE__ [0] == 'M' ? 3 : 4) \
@@ -64,10 +65,16 @@ typedef struct {
 
 
 static RTC_HandleTypeDef rtc ;
-
 static fecha_t getDateTime() ;
 static void setDayAndHour(void) ;
 
+
+/**
+ * @brief: Se realiza el inicio del RTC a partir de las macros definidas en la HAL de STM32.
+ * 		   Se llama a la funcion setDayAndHour para realizar la carga de datos en el RTC.
+ * 		   Estos datos que se cargan es la fecha de compilación del sistema.
+ * 		   Si se inicia correctamente se enciende el led1, si no inicia correctamente se enciende el led2
+ */
 void rtcInit()
 {
 	BSP_LED_Init(LED1) ;
@@ -91,17 +98,16 @@ void rtcInit()
 		BSP_LED_On(LED2) ;
 
 	}
-
 	setDayAndHour() ;
 	BSP_LED_On(LED1) ;
-
 }
+
 
 
 /**
  * @brief: Configura la hora del RTC a partir de la hora de compilación del programa
- * Se usan las macros __TIME__ y __DATE__
- *
+ * Se usan las macros __TIME__ y __DATE__. En el caso del mes, se utiliza la macro "MONTH_COMPILATION"
+ * que devuelve el número de mes que se realizó la compilación.
  *
  */
 static void setDayAndHour(void)
@@ -143,8 +149,8 @@ static void setDayAndHour(void)
 
 
 /**
- * @brief Calcula la hora siderea a partir de la hora local utilizando el algoritmo de
- * 		  fulanito (http://...)
+ * @brief Calcula la hora siderea a partir de la hora local utilizando el algoritmo presentado en el libro
+ * "Orbital mechanics for engineering students" en la sección 5.2 del mismo
  *
  * @param sidereal_time: Parámetro donde se va a cargar la hora siderea calculada. En caso de error
  * 		  al realizar el cálculo se carga un parámetro NULL
@@ -165,7 +171,7 @@ uint8_t computeSiderealTime(sidereal_t *sidereal_time){
 		sidereal_time = NULL  ;
 		error = ERROR_SIDEREAL ;
 	}else{
-
+		// si no hay error al cargar la hora local, aplica el algoritmo de cálculo
 		j0 = K1*sd_time.year + (float) (int )(K2*(float)sd_time.month/K3)
 			+ (float) sd_time.day +  K4 ;
 		negative_term =(float) (int) (multiplicador_term_negativo *((float )sd_time.year

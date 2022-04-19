@@ -2165,10 +2165,10 @@ void FSM_loop(){
  8001584:	20000214 	.word	0x20000214
 
 08001588 <rtcInit>:
-
-static fecha_t getDateTime() ;
-static void setDayAndHour(void) ;
-
+ * @brief: Se realiza el inicio del RTC a partir de las macros definidas en la HAL de STM32.
+ * 		   Se llama a la funcion setDayAndHour para realizar la carga de datos en el RTC.
+ * 		   Estos datos que se cargan es la fecha de compilación del sistema.
+ */
 void rtcInit()
 {
  8001588:	b580      	push	{r7, lr}
@@ -2272,7 +2272,7 @@ void rtcInit()
  8001634:	40002800 	.word	0x40002800
 
 08001638 <setDayAndHour>:
- * Se usan las macros __TIME__ y __DATE__
+ * que devuelve el número de mes que se realizó la compilación.
  *
  *
  */
@@ -2312,7 +2312,7 @@ static void setDayAndHour(void)
  8001668:	b2db      	uxtb	r3, r3
  800166a:	713b      	strb	r3, [r7, #4]
 	  sTime.Minutes = (__TIME__[3] - 0x30)*DECIMAL_INT + (__TIME__[4] - CHAR_TO_INT) ;
- 800166c:	2332      	movs	r3, #50	; 0x32
+ 800166c:	2335      	movs	r3, #53	; 0x35
  800166e:	3b30      	subs	r3, #48	; 0x30
  8001670:	b2db      	uxtb	r3, r3
  8001672:	461a      	mov	r2, r3
@@ -2320,14 +2320,14 @@ static void setDayAndHour(void)
  8001676:	4413      	add	r3, r2
  8001678:	005b      	lsls	r3, r3, #1
  800167a:	b2db      	uxtb	r3, r3
- 800167c:	2236      	movs	r2, #54	; 0x36
+ 800167c:	2231      	movs	r2, #49	; 0x31
  800167e:	4413      	add	r3, r2
  8001680:	b2db      	uxtb	r3, r3
  8001682:	3b30      	subs	r3, #48	; 0x30
  8001684:	b2db      	uxtb	r3, r3
  8001686:	717b      	strb	r3, [r7, #5]
 	  sTime.Seconds = (__TIME__[3] - 0x30)*DECIMAL_INT + (__TIME__[4] - CHAR_TO_INT) ;
- 8001688:	2332      	movs	r3, #50	; 0x32
+ 8001688:	2335      	movs	r3, #53	; 0x35
  800168a:	3b30      	subs	r3, #48	; 0x30
  800168c:	b2db      	uxtb	r3, r3
  800168e:	461a      	mov	r2, r3
@@ -2335,7 +2335,7 @@ static void setDayAndHour(void)
  8001692:	4413      	add	r3, r2
  8001694:	005b      	lsls	r3, r3, #1
  8001696:	b2db      	uxtb	r3, r3
- 8001698:	2236      	movs	r2, #54	; 0x36
+ 8001698:	2231      	movs	r2, #49	; 0x31
  800169a:	4413      	add	r3, r2
  800169c:	b2db      	uxtb	r3, r3
  800169e:	3b30      	subs	r3, #48	; 0x30
@@ -2511,7 +2511,7 @@ uint8_t computeSiderealTime(sidereal_t *sidereal_time){
  80017aa:	bf00      	nop
  80017ac:	3fe00000 	.word	0x3fe00000
 	}else{
-
+		// si no hay error al cargar la hora local, aplica el algoritmo de cálculo
 		j0 = K1*sd_time.year + (float) (int )(K2*(float)sd_time.month/K3)
  80017b0:	893b      	ldrh	r3, [r7, #8]
  80017b2:	4618      	mov	r0, r3
