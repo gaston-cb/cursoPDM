@@ -10,7 +10,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// inicializa la MEF del curso de PDM.
 void initFSM(void) ;
+
+// bucle que administra la máquina de estados. Debe incluirse en la función while(1){}
 void FSM_loop() ;
 
 

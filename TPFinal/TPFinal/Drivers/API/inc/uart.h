@@ -14,5 +14,4 @@
 
 uint8_t uartInit(uint32_t baud_rate) ;
 uint8_t sendSiderealTime();
-void uartSendString( char *uart_tx) ;
 #endif /* API_INC_API_UART_C_ */
