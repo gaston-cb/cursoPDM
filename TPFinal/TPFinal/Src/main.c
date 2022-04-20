@@ -26,7 +26,7 @@
 #include "stm32f4xx_hal.h"
 #include <uart.h>
 #include <handle_FSM.h>
-#define CLOCK_CONFIG_RTC
+#define CLOCK_CONFIG_RTC // configura el clock de la placa nucleo a 32800HZ
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -118,9 +118,13 @@ static void SystemClock_Config(void)
 	  /** Initializes the RCC Oscillators according to the specified parameters
 	  * in the RCC_OscInitTypeDef structure.
 	  */
+#if defined(CLOCK_CONFIG_RTC)
 	  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
-	  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
 	  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+#else
+	  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE ;
+#endif
+	  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
 	  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
 	  RCC_OscInitStruct.PLL.PLLM = 8;

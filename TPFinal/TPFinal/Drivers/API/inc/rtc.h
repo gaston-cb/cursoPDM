@@ -8,6 +8,11 @@
 #ifndef API_INC_RTC_H_
 #define API_INC_RTC_H_
 
+
+/**
+ * @brief tipo de dato destinado a almacenar la hora siderea.
+ *
+ */
 typedef struct {
 	uint8_t h;
 	uint8_t m;
@@ -15,7 +20,6 @@ typedef struct {
 }sidereal_t ;
 
 void rtcInit(void ) ;
-void printRTCParameters() ;
 uint8_t computeSiderealTime(sidereal_t *sidereal_time) ;
 
 

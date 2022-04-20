@@ -52,7 +52,10 @@
 : 12)
 
 
-
+/**
+ * @brief almacena la fecha y hora leida desde el periférico RTC.
+ *
+ */
 typedef struct {
 	uint16_t year;
 	uint8_t month;
@@ -150,7 +153,7 @@ static void setDayAndHour(void)
 
 /**
  * @brief Calcula la hora siderea a partir de la hora local utilizando el algoritmo presentado en el libro
- * "Orbital mechanics for engineering students" en la sección 5.2 del mismo
+ * "Orbital mechanics for engineering students" en la sección 5.2
  *
  * @param sidereal_time: Parámetro donde se va a cargar la hora siderea calculada. En caso de error
  * 		  al realizar el cálculo se carga un parámetro NULL

@@ -12,7 +12,7 @@ Se debe realizar la compilacion del linker con la -u print__float
 
 A continuación se dejan las imágenes del procedimiento 
 ![propiedades](stm_1.png)  
-![flag de linker](stm_1.png)  
+![flag de linker](stm_2.png)  
 
 
 
