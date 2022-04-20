@@ -66,8 +66,8 @@ all: main-build
 main-build: TPFinalPDM.elf secondary-outputs
 
 # Tool invocations
-TPFinalPDM.elf: $(OBJS) $(USER_OBJS) D:\curso_sistemas_embebidos\programacionMicroprocesadores\TPFinal\ej5.1\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TPFinalPDM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\curso_sistemas_embebidos\programacionMicroprocesadores\TPFinal\ej5.1\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TPFinalPDM.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TPFinalPDM.elf: $(OBJS) $(USER_OBJS) D:\curso_sistemas_embebidos\programacionMicroprocesadores\TPFinal\TPFinal\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TPFinalPDM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\curso_sistemas_embebidos\programacionMicroprocesadores\TPFinal\TPFinal\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TPFinalPDM.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
