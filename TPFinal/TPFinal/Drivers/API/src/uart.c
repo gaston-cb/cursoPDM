@@ -12,7 +12,7 @@
 #include <string.h>
 #include <uart.h>
 #include <stdio.h>
-
+#define SIZE_STRING_UART 40
 #define ERROR_UART 0xFF
 #define NO_ERROR_UART 0x01
 
@@ -57,7 +57,7 @@ uint8_t uartInit(uint32_t baud_rate){
  */
 uint8_t sendSiderealTime(){
 	sidereal_t stime ;
-	char uart_tx [10] ; //"hh:mm:ss" ;
+	char uart_tx [SIZE_STRING_UART] ; //"hh:mm:ss" ;
 	uint8_t get_sidereal_time =computeSiderealTime(&stime) ;
 
 	uint8_t response ;
@@ -67,10 +67,9 @@ uint8_t sendSiderealTime(){
 		response = get_sidereal_time ;
 
 	}else if (get_sidereal_time==0x01){
-		sprintf(uart_tx,"%02d:%02d:%02d",stime.h,stime.m,stime.s) ;
+		sprintf(uart_tx,"%02d:%02d:%02d \r\n",stime.h,stime.m,stime.s) ;
     	response = get_sidereal_time ;
    }
-
 
 	uartSendString(uart_tx) ;
 	return response ;
@@ -82,8 +81,7 @@ uint8_t sendSiderealTime(){
  *
  * @param uart_tx string a enviar por el puerto serie usando la UART
  */
-
-static void uartSendString( char *uart_tx){
+static void uartSendString(char *uart_tx){
 
 	HAL_UART_Transmit(&uart_handle,uart_tx, strlen(uart_tx), 500) ;
 
